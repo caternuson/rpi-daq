@@ -14,12 +14,20 @@
 #include <unistd.h>
 #include <string>
 
+#define DEFAULT_I2C_BUS "/dev/i2c-1"
+#define DEFAULT_I2C_ADDRESS 0x48
+
 class I2C {
   private:
     int file;
     int address;
   public:
     I2C();
+    ~I2C();
+    int init();
+    int init(int addr);
+    int init(std::string dev, int addr);
+    int shutdown();
     int write_byte(char value);
     int write_byte_data(char reg, char value);
     int write_block_data(char reg, char* values, int length);

@@ -6,9 +6,40 @@
 //---------------------------------------------------------------------------
 #include "I2C.h"
 
+#include <stdio.h>
+
 I2C::I2C() {
-    file = open("/dev/i2c-1", O_RDWR);
-    ioctl(file, I2C_SLAVE, 0x48);    
+    file = -1;
+    address = -1;
+}
+
+I2C::~I2C() {
+    shutdown();
+}
+
+int I2C::init() {
+    return init(DEFAULT_I2C_BUS, DEFAULT_I2C_ADDRESS); 
+}
+
+int I2C::init(int addr) {
+    return init(DEFAULT_I2C_BUS, addr);
+}
+
+int I2C::init(std::string dev, int addr) {
+    address = addr;
+    file = open(dev.c_str(), O_RDWR);
+    if (file < 0) {
+        return -1;
+    }
+    ioctl(file, I2C_SLAVE, address);
+    return 0;   
+}
+
+int I2C::shutdown() {
+    if (file < 0) {
+        return -1;
+    }
+    return close(file);
 }
 
 int I2C::write_byte(char value) {

@@ -14,6 +14,11 @@
 #include <unistd.h>
 #include <stdio.h>
 
+#define DEFAULT_ADDRESS 0x48
+#define DEFAULT_CHAN 0
+#define DEFAULT_PGA 6144
+#define DEFAULT_SPS 250
+
 class ADS1015 {
     private:
         // Pointer Register
@@ -72,12 +77,16 @@ class ADS1015 {
 
     public:
         ADS1015();
-        int readADCSingleEnded(); 
+        ADS1015(int addr);
+        int readADCSingleEnded();
+        int readADCSingleEnded(int chan);
         int readADCSingleEnded(int chan, int pga, int sps);
         
     private:
         I2C i2c;
         int address;
+        int sps;
+        int pga;
         int regChan(int chan);
         int regPga(int pga);
         int regSps(int sps);

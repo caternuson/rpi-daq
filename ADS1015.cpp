@@ -9,11 +9,21 @@
 #include "ADS1015.h"
 
 ADS1015::ADS1015() {
-    i2c = I2C();
+    address = DEFAULT_ADDRESS;
+    i2c.init(address);
+}
+
+ADS1015::ADS1015(int addr) {
+    address = addr;
+    i2c.init(address); 
 }
 
 int ADS1015::readADCSingleEnded() {
-    return readADCSingleEnded(0, 6144, 250);
+    return readADCSingleEnded(DEFAULT_CHAN, DEFAULT_PGA, DEFAULT_SPS);
+}
+
+int ADS1015::readADCSingleEnded(int chan) {
+    return readADCSingleEnded(chan, DEFAULT_PGA, DEFAULT_SPS);
 }
 
 int ADS1015::readADCSingleEnded(int chan, int pga, int sps) {
@@ -34,13 +44,11 @@ int ADS1015::readADCSingleEnded(int chan, int pga, int sps) {
     data[0] = (config >> 8) & 0xFF;
     data[1] = config & 0xFF;
     
-    //printf("write return %i\n",i2c.write_block_data(REG_POINTER_CONFIG, data, 2));
     i2c.write_block_data(REG_POINTER_CONFIG, data, 2);
 
-    usleep(4100);
+    usleep(int(1e6*(1.0/sps)));
     
     char result[2];
-    //printf("read return %i\n",i2c.read_block_data(REG_POINTER_CONVERT, result, 2));
     i2c.read_block_data(REG_POINTER_CONVERT, result, 2);
     
     return ( ((result[0] << 8) | (result[1] & 0xFF)) >> 4 ) * pga/2048.0;
