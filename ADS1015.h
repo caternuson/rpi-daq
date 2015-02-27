@@ -11,8 +11,6 @@
 #define ADS1015_H
 
 #include "I2C.h"
-#include <unistd.h>
-#include <stdio.h>
 
 #define DEFAULT_ADDRESS 0x48
 #define DEFAULT_CHAN 0
@@ -81,7 +79,7 @@ class ADS1015 {
         int readADCSingleEnded();
         int readADCSingleEnded(int chan);
         int readADCSingleEnded(int chan, int pga, int sps);
-        
+        int readScan(int readings[4]);
     private:
         I2C i2c;
         int address;

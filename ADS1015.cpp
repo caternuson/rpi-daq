@@ -54,6 +54,14 @@ int ADS1015::readADCSingleEnded(int chan, int pga, int sps) {
     return ( ((result[0] << 8) | (result[1] & 0xFF)) >> 4 ) * pga/2048.0;
 }
 
+int ADS1015::readScan(int readings[4]) {
+    readings[0] = readADCSingleEnded(0);
+    readings[1] = readADCSingleEnded(1);
+    readings[2] = readADCSingleEnded(2);
+    readings[3] = readADCSingleEnded(3);
+    return 0;
+}
+
 int ADS1015::regChan(int chan) {
     switch (chan) {
         case 1: return REG_CONFIG_MUX_SINGLE_1;
