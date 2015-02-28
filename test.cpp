@@ -14,12 +14,13 @@ int main(void) {
                                     adc.readADCSingleEnded(2),
                                     adc.readADCSingleEnded(3));
         */
-        adc.readScan(data);
+        //adc.readScan(data);
+        adc.readScanAvg(data, 5);
         printf("%i\t%i\t%i\t%i\n",  data[0],
                                     data[1],
                                     data[2],
                                     data[3]);
-        usleep(100000);
+        usleep(50000);
     }
     
     return 0;

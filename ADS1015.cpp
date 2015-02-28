@@ -54,12 +54,34 @@ int ADS1015::readADCSingleEnded(int chan, int pga, int sps) {
     return ( ((result[0] << 8) | (result[1] & 0xFF)) >> 4 ) * pga/2048.0;
 }
 
+int ADS1015::readAvg(int chan, int pga, int sps, int scans) {
+    float avg = 0;
+    for (int i=0; i<scans; i++) {
+        avg += readADCSingleEnded(chan, pga, sps) / (float)scans;
+    }
+    return (int)avg;
+}
+
 int ADS1015::readScan(int readings[4]) {
     readings[0] = readADCSingleEnded(0);
     readings[1] = readADCSingleEnded(1);
     readings[2] = readADCSingleEnded(2);
     readings[3] = readADCSingleEnded(3);
     return 0;
+}
+
+int ADS1015::readScanAvg(int readings[4], int scans) {
+    float avg[4] = {0};
+    for (int i=0; i<scans; i++) {
+        avg[0] += readADCSingleEnded(0) / (float)scans;
+        avg[1] += readADCSingleEnded(1) / (float)scans;
+        avg[2] += readADCSingleEnded(2) / (float)scans;
+        avg[3] += readADCSingleEnded(3) / (float)scans;
+    }
+    readings[0] = (int)avg[0];
+    readings[1] = (int)avg[1];
+    readings[2] = (int)avg[2];
+    readings[3] = (int)avg[3];
 }
 
 int ADS1015::regChan(int chan) {

@@ -15,7 +15,7 @@
 #define DEFAULT_ADDRESS 0x48
 #define DEFAULT_CHAN 0
 #define DEFAULT_PGA 6144
-#define DEFAULT_SPS 250
+#define DEFAULT_SPS 3300
 
 class ADS1015 {
     private:
@@ -79,7 +79,9 @@ class ADS1015 {
         int readADCSingleEnded();
         int readADCSingleEnded(int chan);
         int readADCSingleEnded(int chan, int pga, int sps);
+        int readAvg(int chan, int pga, int sps, int scans);
         int readScan(int readings[4]);
+        int readScanAvg(int readings[4], int scans);
     private:
         I2C i2c;
         int address;
